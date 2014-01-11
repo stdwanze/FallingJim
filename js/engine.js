@@ -6,12 +6,15 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 
 				this.canvas = canvas;
 				this.ctxt = ctxt;
-				
+				this.repo = new FallingJim.ImageRepo();
 				this.shapes = [];
 				this.eventObjects = [];
 				
 				this.run = false;
 				this.frame = 1;
+				
+				this.shapes.push(new FallingJim.Background("background",this.repo));
+				this.shapes.push(new Kit.Sprite(this.repo.getImage("playerRight"),50, 10));
 				
 				this.init();
 			}
@@ -64,8 +67,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 						shape.tick(this.canvas, this.ctxt);
 					}.bind(this));
 					//clear
-					this.ctxt.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+					this.clear(); 
 					//draw
 					this.shapes.forEach( function(shape) {
 						shape.render(this.canvas, this.ctxt);
@@ -83,6 +85,10 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 							this.tickndraw(frame + 1);
 						}.bind(this));
 					}
+				},
+				clear : function ()
+				{
+					this.ctxt.clearRect(0, 0, this.canvas.width, this.canvas.height);
 				}
 				
 			};
