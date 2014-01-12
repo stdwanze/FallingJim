@@ -12,6 +12,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				
 				/// test
 				this.frame = 0;
+				this.dropout = 0;
 			}
 			channel.prototype = {
 				createNewObj: function (x,height)
@@ -38,9 +39,21 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					this.objects = remainingObjects;
 					
 					//test
-					if(this.frame % 50 === 0)
+					if(this.frame % 70 === 0 && this.dropout-- === 0)
 					{
-						this.objects.push(this.createNewObj(this.x,this.height));
+						var obj = this.createNewObj(this.x,this.height);
+						if(obj.length !== undefined)
+						{
+							obj.forEach(function (item){
+								this.objects.push(item);
+							}.bind(this));
+							
+							this.dropout = 3;
+						}
+						else {
+							this.dropout = 0;
+							this.objects.push(obj);
+						}
 					}
 				}
 			};
@@ -77,7 +90,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				},
 				isOut: function ()
 				{
-					if(this.y <= 0)
+					if(this.y <= -100)
 					{
 						return true;
 					}

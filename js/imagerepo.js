@@ -11,6 +11,11 @@ FallingJim = window.FallingJim || {};
 					this.register("img/coinSilver.png", "silvercoin");
 					this.register("img/coinGold.png", "goldcoin");
 					this.register("img/star.png", "star");
+					this.register("img/grassTop.png", "grassTop");
+					this.register("img/grassCenter.png", "grassCenter");
+					this.register("img/grassEnd.png", "grassEnd");
+					
+				
 				}
 
 
