@@ -14,8 +14,14 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				this.frame = 1;
 				
 				this.shapes.push(new FallingJim.Background("background",this.repo));
-				this.shapes.push(new Kit.Sprite(this.repo.getImage("playerRight"),50, 10));
+				//this.shapes.push(new Kit.Sprite(this.repo.getImage("playerRight"),50, 10));
 				
+				this.positions = [ new Kit.Point(110,10),
+								   new Kit.Point(250,10), 
+								   new Kit.Point(390,10)];
+				this.player = new FallingJim.Player(this.repo,this.positions);
+				
+				this.shapes.push(this.player);
 				this.init();
 			}
 
@@ -29,6 +35,10 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 						};
 					})();
 
+					document.addEventListener("keydown", function (e){
+							this.handleKeyInput(e);
+						
+					}.bind(this));
 					/*this.canvas.addEventListener("click", function(e) {
 
 						var hitXY = this.getXY(e);
@@ -44,6 +54,15 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					}.bind(this), false);
 					*/
 
+				},
+				handleKeyInput: function (event)
+				{
+			
+					switch(event.keyCode)
+					{
+						case 39 : this.player.tryMoveRight(); break;
+						case 37 : this.player.tryMoveLeft(); break;			
+					}
 				},
 				getXY : function (event)
 				{

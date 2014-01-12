@@ -1,4 +1,24 @@
-// Avoid `console` errors in browsers that lack a console.
+
+
+/*
+ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
+
+		FallingJim.Player = (function() {
+			
+			function player ()
+			{
+					
+			
+			}
+			player.prototype = {
+			
+
+			};
+		
+			return player;
+		}());
+}(window.FallingJim || {}));*/
+
 (function() {
     var method;
     var noop = function () {};
@@ -20,5 +40,6 @@
         }
     }
 }());
+
 
 // Place any jQuery/helper plugins in here.
