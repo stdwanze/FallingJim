@@ -2,11 +2,11 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 
 		FallingJim.Engine = (function() {
 
-			function engine(canvas, ctxt) {
+			function engine(canvas, ctxt, imagerepo) {
 
 				this.canvas = canvas;
 				this.ctxt = ctxt;
-				this.repo = new FallingJim.ImageRepo();
+				this.repo = imagerepo; 
 				this.shapes = [];
 				this.eventObjects = [];
 				
@@ -16,12 +16,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				this.shapes.push(new FallingJim.Background("background",this.repo));
 				//this.shapes.push(new Kit.Sprite(this.repo.getImage("playerRight"),50, 10));
 				
-				this.positions = [ new Kit.Point(110,10),
-								   new Kit.Point(250,10), 
-								   new Kit.Point(390,10)];
-				this.player = new FallingJim.Player(this.repo,this.positions);
-				
-				this.shapes.push(this.player);
+			
 				this.init();
 			}
 
@@ -54,6 +49,17 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					}.bind(this), false);
 					*/
 
+				},
+				registerChannels: function (channels)
+				{
+					this.positions = [];
+					this.channels = channels;
+					channels.forEach(function(channel){
+						this.positions.push( new Kit.Point(channel.x,10));
+						this.shapes.push(channel);
+					}.bind(this));
+					this.player = new FallingJim.Player(this.repo,this.positions);
+					this.shapes.push(this.player);
 				},
 				handleKeyInput: function (event)
 				{
