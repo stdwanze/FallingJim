@@ -35,7 +35,11 @@ FallingJim = window.FallingJim || {};
 							channels.push(new FallingJim.Channel(positions[i], height, this.repo));
 							channels[i].createNewObj = function(x, height) {
 
-								var rand = Kit.Helper.getRandomNumber(6);
+								var rand = Kit.Helper.getRandomNumber(9);
+								if (rand > 5)
+								{
+									return null;
+								}
 								if (rand !== 5) {
 									var type = FallingJim.CoinType.getByIndex(rand );
 									return new FallingJim.Coin(type, x, height, 1, this.repo);

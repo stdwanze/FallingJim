@@ -52,13 +52,12 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				},
 				registerChannels: function (channels)
 				{
-					this.positions = [];
+					
 					this.channels = channels;
 					channels.forEach(function(channel){
-						this.positions.push( new Kit.Point(channel.x,10));
 						this.shapes.push(channel);
 					}.bind(this));
-					this.player = new FallingJim.Player(this.repo,this.positions);
+					this.player = new FallingJim.Player(this.repo,this.channels);
 					this.shapes.push(this.player);
 				},
 				handleKeyInput: function (event)

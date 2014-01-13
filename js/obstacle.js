@@ -45,13 +45,24 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					this.x = x;
 					this.y = y;
 					this.speed = speed;
-
+					this.type = obstacletype;
 					FallingJim.ChannelObj.call(this, this.image, x, y, speed);
 			}
 			obstacle.prototype = Object.create(FallingJim.ChannelObj.prototype);
 			obstacle.prototype.constructor = obstacle;
 				
+			obstacle.prototype.tick = function (blocksetter){
+				FallingJim.ChannelObj.prototype.tick.call(this);
+				
+				if(this.y > -60 && this.y < 90)
+				{
+					blocksetter(true);
+				}
+				if(this.type === FallingJim.ObstacleType.GrassEnd && this.y < -50) {
+					blocksetter(false);
+				}
 			
+			};
 				
 			return obstacle;
 		}());
