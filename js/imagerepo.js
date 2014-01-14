@@ -14,7 +14,8 @@ FallingJim = window.FallingJim || {};
 					this.register("img/grassTop.png", "grassTop");
 					this.register("img/grassCenter.png", "grassCenter");
 					this.register("img/grassEnd.png", "grassEnd");
-					
+					this.register("img/left_arrow.png", "hudleft");
+					this.register("img/right_arrow.png", "hudright");
 				
 				}
 

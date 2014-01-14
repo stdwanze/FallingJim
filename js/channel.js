@@ -18,6 +18,15 @@ FallingJim = window.FallingJim || {};
 
 
 				channel.prototype = {
+					collide: function (x,y,width)
+					{
+						this.objects.forEach(function (obj){
+							if(obj.collide(x,y,width))
+							{
+								obj.activateColliderFunc();
+							}
+						});
+					},
 					isBlocked : function ()
 					{
 						return this.blocked;
@@ -52,12 +61,13 @@ FallingJim = window.FallingJim || {};
 							if (obj !== null) {
 								if (obj.length !== undefined) {
 									obj.forEach( function(item) {
+										item.init();
 										this.objects.push(item);
 									}.bind(this));
 
 									this.dropout = 3;
 								} else {
-									
+									obj.init();
 									this.objects.push(obj);
 								}
 							}
@@ -75,7 +85,8 @@ FallingJim = window.FallingJim || {};
 					this.x = x;
 					this.y = y;
 					this.speed = speed;
-
+					this.out = false;
+					this.colliderFunc = null;
 				}
 
 
@@ -92,10 +103,26 @@ FallingJim = window.FallingJim || {};
 						this.y -= this.speed;
 					},
 					isOut : function() {
-						if (this.y <= -100) {
+						if (this.y <= -100 || this.out) {
 							return true;
 						} else
 							return false;
+					},
+					collide: function (x,y,width)
+					{
+						if(this.x >= x && this.x <= x+width && this.y <= y)
+						{
+							return true;
+						}
+						else { return false;}
+						
+					},
+					activateColliderFunc: function ()
+					{
+						if(this.colliderFunc !== null)
+						{
+							this.colliderFunc(); 	
+						}
 					}
 				};
 

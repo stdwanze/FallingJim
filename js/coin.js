@@ -31,12 +31,19 @@ FallingJim = window.FallingJim || {};
 					this.x = x;
 					this.y = y;
 					this.speed = speed;
-
+					
 					FallingJim.ChannelObj.call(this, this.image, x, y, speed);
+					
 				}
 				coin.prototype = Object.create(FallingJim.ChannelObj.prototype);
 				coin.prototype.constructor = coin;
-				
+				coin.prototype.init = function ()
+				{
+					this.colliderFunc = function () {
+						this.out = true;
+						
+					};
+				};
 
 				return coin;
 			}());
