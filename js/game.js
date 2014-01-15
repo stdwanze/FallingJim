@@ -1,6 +1,8 @@
 FallingJim = window.FallingJim || {};
 ( function(FallingJim) {"use strict";
 
+		FallingJim.GameInstance = null;
+		
 		FallingJim.Game = ( function() {
 				var State = {
 					RUN : "run",
@@ -12,7 +14,8 @@ FallingJim = window.FallingJim || {};
 					this.canvas = this.vm.canvas;
 					this.init();
 					this.setState(State.END);
-
+					
+					FallingJim.GameInstance = this;
 				}
 
 
@@ -64,6 +67,10 @@ FallingJim = window.FallingJim || {};
 						this.engine.stop();
 						this.setState(State.END);
 					},
+					dead: function ()
+					{
+						this.stop();
+					}
 				};
 
 				return game;

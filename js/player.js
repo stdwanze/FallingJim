@@ -39,6 +39,9 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 								this.positiontransition = null;
 							}
 						}
+						this.channels.forEach(function (channel){
+							channel.collide(this.x,this.y+this.getSprite().getImage().height,this.getSprite().getImage().width);
+						}.bind(this));
 					},
 					getSprite : function() {
 						var image = null;

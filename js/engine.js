@@ -16,8 +16,13 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				this.shapes.push(new FallingJim.Background("background",this.repo));
 				//this.shapes.push(new Kit.Sprite(this.repo.getImage("playerRight"),50, 10));
 				
-			
 				this.init();
+				
+				this.hudelements = [new Kit.Button(new Kit.Sprite(this.repo.getImage("hudleft"),5,300),function () { this.player.tryMoveLeft();}.bind(this)),
+									new Kit.Button(new Kit.Sprite(this.repo.getImage("hudright"),550,300),function () { this.player.tryMoveRight();}.bind(this))];
+				this.shapes.push(this.hudelements[0]);
+				this.shapes.push(this.hudelements[1]);
+				
 			}
 
 
@@ -34,12 +39,12 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 							this.handleKeyInput(e);
 						
 					}.bind(this));
-					/*this.canvas.addEventListener("click", function(e) {
+					this.canvas.addEventListener("click", function(e) {
 
 						var hitXY = this.getXY(e);
 						console.log('click: x:' + hitXY.x + '/y:' + hitXY.y);
 
-						this.handleClickTouch(hitXY.x, hitXY.y, isShapeToRemoveCallBack);
+						this.handleClickTouch(hitXY.x, hitXY.y);
 					}.bind(this), false);
 
 					this.canvas.addEventListener("touchstart", function(e) {
@@ -47,7 +52,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 						console.log('click: x:' + hitXY.x + '/y:' + hitXY.y);
 						this.handleClickTouch(hitXY.x, hitXY.y, isShapeToRemoveCallBack);
 					}.bind(this), false);
-					*/
+					
 
 				},
 				registerChannels: function (channels)
@@ -59,6 +64,12 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					}.bind(this));
 					this.player = new FallingJim.Player(this.repo,this.channels);
 					this.shapes.push(this.player);
+				},
+				handleClickTouch : function(x,y)
+				{
+					this.hudelements.forEach(function(element){
+						element.isHit(x,y) ? element.activate(): null;	
+					});
 				},
 				handleKeyInput: function (event)
 				{

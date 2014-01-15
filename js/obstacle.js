@@ -47,10 +47,18 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					this.speed = speed;
 					this.type = obstacletype;
 					FallingJim.ChannelObj.call(this, this.image, x, y, speed);
+					
+					
 			}
 			obstacle.prototype = Object.create(FallingJim.ChannelObj.prototype);
 			obstacle.prototype.constructor = obstacle;
-				
+			
+			obstacle.prototype.init = function (){
+				this.colliderFunc = function () {
+						FallingJim.GameInstance.dead();
+				};
+						
+			};	
 			obstacle.prototype.tick = function (blocksetter){
 				FallingJim.ChannelObj.prototype.tick.call(this);
 				
