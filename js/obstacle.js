@@ -25,12 +25,12 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 			
 			createGrassObstacle : function (x,y,speed,imagerepo) {
 				
-				var middleOffset = y +imagerepo.getImage(FallingJim.ObstacleType.GrassTop).height;
-				var endOffset = middleOffset +imagerepo.getImage(FallingJim.ObstacleType.GrassMiddle).height;
+				var middleOffset = y +FallingJim.GameInstance.ImageRepo.getImage(FallingJim.ObstacleType.GrassTop).height;
+				var endOffset = middleOffset +FallingJim.GameInstance.ImageRepo.getImage(FallingJim.ObstacleType.GrassMiddle).height;
 				
-				var top = new FallingJim.Obstacle(FallingJim.ObstacleType.GrassTop,x,y,speed,imagerepo);
-				var middle = new FallingJim.Obstacle(FallingJim.ObstacleType.GrassMiddle,x,middleOffset,speed,imagerepo);
-				var end = new FallingJim.Obstacle(FallingJim.ObstacleType.GrassEnd,x,endOffset,speed,imagerepo);
+				var top = new FallingJim.Obstacle(FallingJim.ObstacleType.GrassTop,x,y,speed);
+				var middle = new FallingJim.Obstacle(FallingJim.ObstacleType.GrassMiddle,x,middleOffset,speed);
+				var end = new FallingJim.Obstacle(FallingJim.ObstacleType.GrassEnd,x,endOffset,speed);
 				
 				return [top,middle,end];
 			}
@@ -39,9 +39,8 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 		FallingJim.Obstacle = (function() {
 			
 			
-			function obstacle (obstacletype, x, y, speed, imagerepo) {
-					this.image = imagerepo.getImage(obstacletype);
-					this.repo = imagerepo;
+			function obstacle (obstacletype, x, y, speed) {
+					this.image = FallingJim.GameInstance.ImageRepo.getImage(obstacletype);
 					this.x = x;
 					this.y = y;
 					this.speed = speed;
@@ -55,7 +54,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 			
 			obstacle.prototype.init = function (){
 				this.colliderFunc = function () {
-						FallingJim.GameInstance.dead();
+						FallingJim.GameInstance.Logic.dead();
 				};
 						
 			};	

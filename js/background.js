@@ -6,7 +6,6 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 			function background (imagename, imagerepo)
 			{
 				this.imagename = imagename;
-				this.repo = imagerepo;
 				this.speed = 1;
 				this.x = 0;
 				this.y = 0;
@@ -35,7 +34,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				},
 				getBackgroundImage : function ()
 				{
-					return this.repo[this.imagename];
+					return FallingJim.GameInstance.ImageRepo.getImage(this.imagename);
 				}
 			};
 		

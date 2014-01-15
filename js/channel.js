@@ -3,11 +3,10 @@ FallingJim = window.FallingJim || {};
 
 		FallingJim.Channel = ( function() {
 
-				function channel(x, height, imagerepo) {
+				function channel(x, height) {
 					this.x = x;
 					this.height = height;
-					this.repo = imagerepo;
-
+				
 					this.objects = [];
 
 					/// test
@@ -18,10 +17,10 @@ FallingJim = window.FallingJim || {};
 
 
 				channel.prototype = {
-					collide: function (x,y,width)
+					collide: function (x,y,width,height)
 					{
 						this.objects.forEach(function (obj){
-							if(obj.collide(x,y,width))
+							if(obj.collide(x,y,width,height))
 							{
 								obj.activateColliderFunc();
 							}
@@ -84,6 +83,9 @@ FallingJim = window.FallingJim || {};
 					this.image = image;
 					this.x = x;
 					this.y = y;
+					this.width = this.getSprite().width;
+					this.height = this.getSprite().height;
+						
 					this.speed = speed;
 					this.out = false;
 					this.colliderFunc = null;
@@ -108,16 +110,13 @@ FallingJim = window.FallingJim || {};
 						} else
 							return false;
 					},
-					collide: function (x,y,width)
+					collide: function (x,y,width,height)
 					{
-						if((this.x >= x && this.x <= x+width && this.y <= y &&
-							this.y+this.getSprite().getImage().height > 0) ||
-							this.x+this.getSprite().getImage().width > x && this.x < x &&
-							this.y <= y && this.y+this.getSprite().getImage().height > 0)
-						{
-							return true;
-						}
-						else { return false;}
+						
+						if (this.x < x + width  && this.x + this.width  > x &&
+ 					        this.y < y + height && this.y + this.height > y) {
+						return true;
+						}else { return false;}
 						
 					},
 					activateColliderFunc: function ()

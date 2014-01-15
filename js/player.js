@@ -7,7 +7,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					RIGHT : "right"
 				};
 
-				function player(imagerepo, channels) {
+				function player(channels) {
 					this.channels = channels;
 					this.positions = [];
 					channels.forEach( function(channel) {
@@ -18,7 +18,6 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					this.y = this.positions[0].y;
 					this.currPos = 0;
 
-					this.repo = imagerepo;
 					this.dir = Direction.RIGHT;
 
 					this.movementspeed = 4;
@@ -40,17 +39,17 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 							}
 						}
 						this.channels.forEach(function (channel){
-							channel.collide(this.x,this.y+this.getSprite().getImage().height,this.getSprite().getImage().width);
+							channel.collide(this.x,this.y,this.getSprite().width,this.getSprite().height);
 						}.bind(this));
 					},
 					getSprite : function() {
 						var image = null;
 						switch(this.dir) {
 							case Direction.LEFT:
-								image = this.repo.getImage("playerLeft");
+								image = FallingJim.GameInstance.ImageRepo.getImage("playerLeft");
 								break;
 							default:
-								image = this.repo.getImage("playerRight");
+								image = FallingJim.GameInstance.ImageRepo.getImage("playerRight");
 						}
 
 						return new Kit.Sprite(image, this.x, this.y);

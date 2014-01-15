@@ -1,7 +1,13 @@
 FallingJim = window.FallingJim || {};
 ( function(FallingJim) {"use strict";
 
-		FallingJim.GameInstance = null;
+		FallingJim.GameInstance = {
+			Logic : null,
+			ImageRepo : null,
+			SoundManager : null,
+		};
+		
+		
 		
 		FallingJim.Game = ( function() {
 				var State = {
@@ -15,15 +21,16 @@ FallingJim = window.FallingJim || {};
 					this.init();
 					this.setState(State.END);
 					
-					FallingJim.GameInstance = this;
+					FallingJim.GameInstance.Logic = this;
 				}
 
 
 				game.prototype = {
 
 					init : function() {
-						this.repo = new FallingJim.ImageRepo();
-						this.engine = new FallingJim.Engine(this.canvas, this.canvas.getContext("2d"), this.repo);
+						FallingJim.GameInstance.ImageRepo = new FallingJim.ImageRepo();
+			
+						this.engine = new FallingJim.Engine(this.canvas, this.canvas.getContext("2d"));
 
 						this.channels = this.generateChannels();
 						this.engine.registerChannels(this.channels);
@@ -45,9 +52,9 @@ FallingJim = window.FallingJim || {};
 								}
 								if (rand !== 5) {
 									var type = FallingJim.CoinType.getByIndex(rand );
-									return new FallingJim.Coin(type, x, height, 1, this.repo);
+									return new FallingJim.Coin(type, x, height, 1);
 								} else {
-									return FallingJim.ObstacleFactory.createGrassObstacle(x, height, 1, this.repo);
+									return FallingJim.ObstacleFactory.createGrassObstacle(x, height, 1);
 								}
 
 							}.bind(this);

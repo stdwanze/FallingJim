@@ -25,9 +25,8 @@ FallingJim = window.FallingJim || {};
 		};
 		FallingJim.Coin = ( function() {
 
-				function coin(cointype, x, y, speed, imagerepo) {
-					this.image = imagerepo.getImage(cointype);
-					this.repo = imagerepo;
+				function coin(cointype, x, y, speed) {
+					this.image = FallingJim.GameInstance.ImageRepo.getImage(cointype);
 					this.x = x;
 					this.y = y;
 					this.speed = speed;

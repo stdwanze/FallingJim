@@ -2,24 +2,23 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 
 		FallingJim.Engine = (function() {
 
-			function engine(canvas, ctxt, imagerepo) {
+			function engine(canvas, ctxt) {
 
 				this.canvas = canvas;
 				this.ctxt = ctxt;
-				this.repo = imagerepo; 
 				this.shapes = [];
 				this.eventObjects = [];
 				
 				this.run = false;
 				this.frame = 1;
 				
-				this.shapes.push(new FallingJim.Background("background",this.repo));
+				this.shapes.push(new FallingJim.Background("background"));
 				//this.shapes.push(new Kit.Sprite(this.repo.getImage("playerRight"),50, 10));
 				
 				this.init();
 				
-				this.hudelements = [new Kit.Button(new Kit.Sprite(this.repo.getImage("hudleft"),5,300),function () { this.player.tryMoveLeft();}.bind(this)),
-									new Kit.Button(new Kit.Sprite(this.repo.getImage("hudright"),550,300),function () { this.player.tryMoveRight();}.bind(this))];
+				this.hudelements = [new Kit.Button(new Kit.Sprite(FallingJim.GameInstance.ImageRepo.getImage("hudleft"),5,300),function () { this.player.tryMoveLeft();}.bind(this)),
+									new Kit.Button(new Kit.Sprite(FallingJim.GameInstance.ImageRepo.getImage("hudright"),550,300),function () { this.player.tryMoveRight();}.bind(this))];
 				this.shapes.push(this.hudelements[0]);
 				this.shapes.push(this.hudelements[1]);
 				
@@ -62,7 +61,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					channels.forEach(function(channel){
 						this.shapes.push(channel);
 					}.bind(this));
-					this.player = new FallingJim.Player(this.repo,this.channels);
+					this.player = new FallingJim.Player(this.channels);
 					this.shapes.push(this.player);
 				},
 				handleClickTouch : function(x,y)
