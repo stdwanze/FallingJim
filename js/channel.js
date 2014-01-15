@@ -110,7 +110,10 @@ FallingJim = window.FallingJim || {};
 					},
 					collide: function (x,y,width)
 					{
-						if(this.x >= x && this.x <= x+width && this.y <= y)
+						if((this.x >= x && this.x <= x+width && this.y <= y &&
+							this.y+this.getSprite().getImage().height > 0) ||
+							this.x+this.getSprite().getImage().width > x && this.x < x &&
+							this.y <= y && this.y+this.getSprite().getImage().height > 0)
 						{
 							return true;
 						}
