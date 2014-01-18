@@ -6,10 +6,10 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 			function background (imagename, imagerepo)
 			{
 				this.imagename = imagename;
-				this.speed = 1;
+				this.speed = FallingJim.GameInstance.Config.BackgroundSpeed;
 				this.x = 0;
 				this.y = 0;
-				
+				this.soundrun = false;
 				
 			}
 			
@@ -17,6 +17,11 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				
 				tick : function ()
 				{
+					if(this.soundrun == false)
+					{
+						FallingJim.GameInstance.SoundManager.play(FallingJim.Sounds.Background.name);
+						this.soundrun = true;
+					}
 					this.y -= this.speed;
 				},
 				render : function (canvas,ctxt)

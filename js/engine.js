@@ -17,10 +17,13 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				
 				this.init();
 				
+				this.points = new Kit.TextArea(530,30,"Arial",16,"blue");
+				this.points.setText("0 Pts");
 				this.hudelements = [new Kit.Button(new Kit.Sprite(FallingJim.GameInstance.ImageRepo.getImage("hudleft"),5,300),function () { this.player.tryMoveLeft();}.bind(this)),
 									new Kit.Button(new Kit.Sprite(FallingJim.GameInstance.ImageRepo.getImage("hudright"),550,300),function () { this.player.tryMoveRight();}.bind(this))];
 				this.shapes.push(this.hudelements[0]);
 				this.shapes.push(this.hudelements[1]);
+				this.shapes.push(this.points);
 				
 			}
 
@@ -49,7 +52,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					this.canvas.addEventListener("touchstart", function(e) {
 						var hitXY = this.getXY(e);
 						console.log('click: x:' + hitXY.x + '/y:' + hitXY.y);
-						this.handleClickTouch(hitXY.x, hitXY.y, isShapeToRemoveCallBack);
+						this.handleClickTouch(hitXY.x, hitXY.y);
 					}.bind(this), false);
 					
 
@@ -123,6 +126,30 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				clear : function ()
 				{
 					this.ctxt.clearRect(0, 0, this.canvas.width, this.canvas.height);
+				},
+				setPoints : function (pointsText)
+				{
+					this.points.setText(pointsText);
+					this.points.size = 16;
+					this.countDown = 5;
+					this.points.transition = this.getPointsSizeTransition(1,this.getPointsSizeTransition(-1,null));
+				},
+				getPointsSizeTransition : function (modDirection, reverser)
+				{
+					return new Kit.Transition(function (mod) { this.size += modDirection * mod; }.bind(this.points), 2, 	function() {
+									
+									if(this.countDown === 0)
+									{
+										this.countDown = 5;
+										this.points.transition = reverser;
+										return true;
+									}
+									else {
+										this.countDown -= 1;
+									}
+									return false;
+									
+							}.bind(this));
 				}
 				
 			};

@@ -20,7 +20,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 
 					this.dir = Direction.RIGHT;
 
-					this.movementspeed = 4;
+					this.movementspeed = FallingJim.GameInstance.Config.PlayerMovementSpeed;
 					this.positiontransition = null;
 				}
 

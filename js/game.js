@@ -1,14 +1,41 @@
-FallingJim = window.FallingJim || {};
-( function(FallingJim) {"use strict";
+FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 
 		FallingJim.GameInstance = {
 			Logic : null,
 			ImageRepo : null,
 			SoundManager : null,
+			Config : null
 		};
-		
-		
-		
+
+		FallingJim.Configuration = {
+			BackgroundSpeed : 1,
+			FallingSpeed : 2,
+			PlayerMovementSpeed : 4
+		};
+
+		FallingJim.Sounds = {
+			ShortCoin : {
+				name : "shortCoin",
+				url : "sound/shortcoin.mp3"
+			},
+			LongCoin : {
+				name : "longCoin",
+				url : "sound/longcoin.mp3"
+			},
+			Star : {
+				name : "star",
+				url : "sound/star.mp3"
+			},
+			Death : {
+				name : "death",
+				url : "sound/death1.mp3"
+			},
+			Background : {
+				name : "artblock",
+				url : "sound/artblock.ogg"
+			}
+		};
+
 		FallingJim.Game = ( function() {
 				var State = {
 					RUN : "run",
@@ -20,7 +47,7 @@ FallingJim = window.FallingJim || {};
 					this.canvas = this.vm.canvas;
 					this.init();
 					this.setState(State.END);
-					
+					this.points = 0;
 					FallingJim.GameInstance.Logic = this;
 				}
 
@@ -28,10 +55,20 @@ FallingJim = window.FallingJim || {};
 				game.prototype = {
 
 					init : function() {
+						FallingJim.GameInstance.Config = FallingJim.Configuration;
 						FallingJim.GameInstance.ImageRepo = new FallingJim.ImageRepo();
-			
-						this.engine = new FallingJim.Engine(this.canvas, this.canvas.getContext("2d"));
+						this.sm = new Kit.SoundManager();
 
+						FallingJim.GameInstance.SoundManager = this.sm;
+						//SOUND
+						FallingJim.GameInstance.SoundManager.registerSoundPool(10, FallingJim.Sounds.ShortCoin.name, FallingJim.Sounds.ShortCoin.url);
+						FallingJim.GameInstance.SoundManager.registerSoundPool(10, FallingJim.Sounds.LongCoin.name, FallingJim.Sounds.LongCoin.url);
+						FallingJim.GameInstance.SoundManager.registerSoundPool(10, FallingJim.Sounds.Star.name, FallingJim.Sounds.Star.url);
+						FallingJim.GameInstance.SoundManager.registerSoundPool(1, FallingJim.Sounds.Death.name, FallingJim.Sounds.Death.url);
+						FallingJim.GameInstance.SoundManager.registerSoundPool(1, FallingJim.Sounds.Background.name, FallingJim.Sounds.Background.url);
+
+						// ENGINE
+						this.engine = new FallingJim.Engine(this.canvas, this.canvas.getContext("2d"));
 						this.channels = this.generateChannels();
 						this.engine.registerChannels(this.channels);
 
@@ -46,15 +83,15 @@ FallingJim = window.FallingJim || {};
 							channels[i].createNewObj = function(x, height) {
 
 								var rand = Kit.Helper.getRandomNumber(9);
-								if (rand > 5)
-								{
+								if (rand > 5) {
 									return null;
 								}
 								if (rand !== 5) {
-									var type = FallingJim.CoinType.getByIndex(rand );
-									return new FallingJim.Coin(type, x, height, 1);
+									var type = FallingJim.CoinType.getByIndex(rand);
+									return new FallingJim.Coin(type, x, height, FallingJim.GameInstance.Config.FallingSpeed);
+									
 								} else {
-									return FallingJim.ObstacleFactory.createGrassObstacle(x, height, 1);
+									return FallingJim.ObstacleFactory.createGrassObstacle(x, height, FallingJim.GameInstance.Config.FallingSpeed);
 								}
 
 							}.bind(this);
@@ -63,6 +100,11 @@ FallingJim = window.FallingJim || {};
 						return channels;
 					},
 					run : function() {
+						this.sm.load().done( function() {
+							this._run();
+						}.bind(this));
+					},
+					_run : function() {
 						this.setState(State.RUN);
 						this.engine.clear();
 						this.engine.start();
@@ -74,12 +116,45 @@ FallingJim = window.FallingJim || {};
 						this.engine.stop();
 						this.setState(State.END);
 					},
-					dead: function ()
-					{
+					dead : function() {
+
 						this.stop();
+						FallingJim.GameInstance.SoundManager.play(FallingJim.Sounds.Death.name);
+						
+					},
+					collideCoin : function(coin) {
+						coin.out = true;
+
+						var sound = FallingJim.Sounds.ShortCoin.name;
+						switch(coin.type) {
+							case FallingJim.CoinType.Gold :
+								FallingJim.GameInstance.Logic.addPoints(10);
+								sound = FallingJim.Sounds.ShortCoin.name;
+								break;
+							case FallingJim.CoinType.Silver :
+								FallingJim.GameInstance.Logic.addPoints(5);
+								sound = FallingJim.Sounds.LongCoin.name;
+								break;
+							case FallingJim.CoinType.Bronze :
+								FallingJim.GameInstance.Logic.addPoints(2);
+								sound = FallingJim.Sounds.LongCoin.name;
+								break;
+							case FallingJim.CoinType.Star :
+								FallingJim.GameInstance.Logic.addPoints(15);
+								sound = FallingJim.Sounds.Star.name;
+								break;
+
+						}
+						FallingJim.GameInstance.SoundManager.play(sound);
+					},
+					addPoints : function (points)
+					{
+						this.points += points;
+						this.engine.setPoints(this.points + " Pts");
 					}
+					
 				};
 
 				return game;
 			}());
-	}(window.FallingJim || {})); 
+	}(window.FallingJim || {}));

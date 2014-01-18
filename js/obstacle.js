@@ -54,7 +54,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 			
 			obstacle.prototype.init = function (){
 				this.colliderFunc = function () {
-						FallingJim.GameInstance.Logic.dead();
+						FallingJim.GameInstance.Logic.dead(this);
 				};
 						
 			};	
