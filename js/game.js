@@ -1,4 +1,5 @@
-FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
+FallingJim = window.FallingJim || {};
+( function(FallingJim) {"use strict";
 
 		FallingJim.GameInstance = {
 			Logic : null,
@@ -67,10 +68,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 						FallingJim.GameInstance.SoundManager.registerSoundPool(1, FallingJim.Sounds.Death.name, FallingJim.Sounds.Death.url);
 						FallingJim.GameInstance.SoundManager.registerSoundPool(1, FallingJim.Sounds.Background.name, FallingJim.Sounds.Background.url);
 
-						// ENGINE
-						this.engine = new FallingJim.Engine(this.canvas, this.canvas.getContext("2d"));
-						this.channels = this.generateChannels();
-						this.engine.registerChannels(this.channels);
+						this.osd = new Kit.OSDManager(this.canvas, this.canvas.getContext("2d"));
 
 					},
 					generateChannels : function() {
@@ -89,7 +87,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 								if (rand !== 5) {
 									var type = FallingJim.CoinType.getByIndex(rand);
 									return new FallingJim.Coin(type, x, height, FallingJim.GameInstance.Config.FallingSpeed);
-									
+
 								} else {
 									return FallingJim.ObstacleFactory.createGrassObstacle(x, height, FallingJim.GameInstance.Config.FallingSpeed);
 								}
@@ -105,6 +103,12 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 						}.bind(this));
 					},
 					_run : function() {
+						// ENGINE
+						this.points = 0;
+						this.engine = new FallingJim.Engine(this.canvas, this.canvas.getContext("2d"));
+						this.channels = this.generateChannels();
+						this.engine.registerChannels(this.channels);
+
 						this.setState(State.RUN);
 						this.engine.clear();
 						this.engine.start();
@@ -120,7 +124,14 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 
 						this.stop();
 						FallingJim.GameInstance.SoundManager.play(FallingJim.Sounds.Death.name);
-						
+					
+						setTimeout(function() {
+							this.osd.add(new Kit.Button(new Kit.Sprite(FallingJim.GameInstance.ImageRepo.getImage("restart"), 300, 200), this._run.bind(this)));
+							this.osd.add(new Kit.TextArea(295,270,"Arial",16,"blue").setText("restart"));
+							
+							this.osd.render();
+						}.bind(this), 200);
+
 					},
 					collideCoin : function(coin) {
 						coin.out = true;
@@ -147,12 +158,10 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 						}
 						FallingJim.GameInstance.SoundManager.play(sound);
 					},
-					addPoints : function (points)
-					{
+					addPoints : function(points) {
 						this.points += points;
 						this.engine.setPoints(this.points + " Pts");
 					}
-					
 				};
 
 				return game;
