@@ -6,7 +6,7 @@ FallingJim = window.FallingJim || {};
 				function imagerepo() {
 					this.register("img/sky.png", "background");
 					this.register("img/player_left.png", "playerLeft");
-					this.register("img/player_right.png", "playerRight");
+				//	this.register("img/player_right.png", "playerRight");
 					this.register("img/coinBronze.png", "bronzecoin");
 					this.register("img/coinSilver.png", "silvercoin");
 					this.register("img/coinGold.png", "goldcoin");
@@ -17,6 +17,7 @@ FallingJim = window.FallingJim || {};
 					this.register("img/left_arrow.png", "hudleft");
 					this.register("img/right_arrow.png", "hudright");
 					this.register("img/restart.png","restart");
+					this.registerAnimation("img/player_right",4,"png","playerRight");
 				}
 
 
@@ -24,6 +25,17 @@ FallingJim = window.FallingJim || {};
 					register : function(path, attrname) {
 						this[attrname] = new Image();
 						this[attrname].src = path;
+					},
+					registerAnimation : function(pathbase,count,type, attrname) {
+						this[attrname] = [];
+						
+						for(var i = 0; i < count; i++)
+						{
+							var image = new Image();
+							image.src = pathbase+i+"."+type;
+							this[attrname].push(image);
+						}
+					
 					},
 					getImage : function(name) {
 						return this[name];

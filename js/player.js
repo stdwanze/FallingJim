@@ -22,6 +22,8 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 
 					this.movementspeed = FallingJim.GameInstance.Config.PlayerMovementSpeed;
 					this.positiontransition = null;
+				
+					this.initSprites();
 				}
 
 
@@ -32,6 +34,9 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 						sprite.render(canvas, ctxt);
 					},
 					tick : function() {
+						this.right.tick(this.x,this.y);
+						this.left.tick(this.x,this.y);
+						
 						if (this.positiontransition != null) {
 							this.positiontransition.tick();
 							if (this.positiontransition.end()) {
@@ -42,21 +47,24 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 							channel.collide(this.x,this.y,this.getSprite().width,this.getSprite().height);
 						}.bind(this));
 					},
+					initSprites : function ()
+					{
+						this.right =  new Kit.Sprite( FallingJim.GameInstance.ImageRepo.getImage("playerLeft"), this.x, this.y);
+						this.left =  new Kit.Sprite(FallingJim.GameInstance.ImageRepo.getImage("playerRight"), this.x, this.y);
+						
+					},
 					getSprite : function() {
-						var image = null;
 						switch(this.dir) {
 							case Direction.LEFT:
-								image = FallingJim.GameInstance.ImageRepo.getImage("playerLeft");
-								break;
+								return this.right;
 							default:
-								image = FallingJim.GameInstance.ImageRepo.getImage("playerRight");
+								return this.left;
 						}
-
-						return new Kit.Sprite(image, this.x, this.y);
 					},
 
 					tryMoveRight : function() {
 						if (this.currPos < this.positions.length && this.positiontransition === null) {
+							this.dir = Direction.RIGHT;
 							if (!this.channels[this.currPos + 1].isBlocked()) {
 								this.positiontransition = new Kit.Transition( function(offset) {
 									this.x = this.x + offset;
@@ -72,7 +80,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					},
 					tryMoveLeft : function() {
 						if (this.currPos > 0 && this.positiontransition === null) {
-
+							this.dir = Direction.LEFT;
 							if (!this.channels[this.currPos - 1].isBlocked()) {
 
 								this.positiontransition = new Kit.Transition( function(offset) {

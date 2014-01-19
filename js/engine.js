@@ -33,7 +33,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					window.requestAnimFrame = (function(callback) {
 						return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
 						function(callback) {
-							window.setTimeout(callback, 1000 / 60);
+							window.setTimeout(callback, 1000 / 30);
 						};
 					})();
 
@@ -116,11 +116,12 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					}.bind(this));
 					this.eventObjects = [];
 
+					var self = this;
 					// register next
 					if (this.run) {
 						requestAnimFrame( function() {
-							this.tickndraw(frame + 1);
-						}.bind(this));
+							self.tickndraw(frame + 1);
+						});
 					}
 				},
 				clear : function ()

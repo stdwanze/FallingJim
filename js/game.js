@@ -75,7 +75,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					generateChannels : function() {
 						var height = this.canvas.height;
 						var positions = [140, 270, 400];
-						this.levels = [new FallingJim.Level(positions, 5)];
+						this.levels = [new FallingJim.Level(positions, 10)];
 						//
 
 						var channels = [];
@@ -222,7 +222,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 										obj = FallingJim.ObstacleFactory.createGrassObstacle(x, height, FallingJim.GameInstance.Config.FallingSpeed);
 										console.log("->obstacle");
 									}
-									console.log("blocked->no obstacle");
+									else {console.log("blocked->no obstacle");}
 								}
 								deferred.resolve(obj);
 							}.bind(this));
