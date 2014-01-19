@@ -1,12 +1,11 @@
-FallingJim = window.FallingJim || {};
-( function(FallingJim) {"use strict";
+FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 
 		FallingJim.Channel = ( function() {
 
 				function channel(x, height) {
 					this.x = x;
 					this.height = height;
-				
+
 					this.objects = [];
 
 					/// test
@@ -17,17 +16,14 @@ FallingJim = window.FallingJim || {};
 
 
 				channel.prototype = {
-					collide: function (x,y,width,height)
-					{
-						this.objects.forEach(function (obj){
-							if(obj.collide(x,y,width,height))
-							{
+					collide : function(x, y, width, height) {
+						this.objects.forEach(function(obj) {
+							if (obj.collide(x, y, width, height)) {
 								obj.activateColliderFunc();
 							}
 						});
 					},
-					isBlocked : function ()
-					{
+					isBlocked : function() {
 						return this.blocked;
 					},
 					createNewObj : function(x, height) {
@@ -43,9 +39,9 @@ FallingJim = window.FallingJim || {};
 						this.frame += 1;
 						var remainingObjects = [];
 						this.objects.forEach( function(item) {
-							item.tick(function(block){ 
+							item.tick( function(block) {
 								this.blocked = block;
-								this.blocked ? console.log("blocked channel "+ this.x): console.log("unblocked channel "+ this.x);
+							//	this.blocked ? console.log("blocked channel " + this.x) : console.log("unblocked channel " + this.x);
 							}.bind(this));
 							if (!item.isOut()) {
 								remainingObjects.push(item);
@@ -54,22 +50,24 @@ FallingJim = window.FallingJim || {};
 						this.objects = remainingObjects;
 
 						//test
-						if (this.frame % 70 === 0 && this.dropout-- === 0) {
-							var obj = this.createNewObj(this.x, this.height);
-							this.dropout = 0;
-							if (obj !== null) {
-								if (obj.length !== undefined) {
-									obj.forEach( function(item) {
-										item.init();
-										this.objects.push(item);
-									}.bind(this));
+						if (this.frame % 22 === 0 && this.dropout-- === 0) {
+							this.createNewObj(this.x, this.height).done( function(obj) {
+								this.dropout = 0;
+								if (obj !== null) {
+									if (obj.length !== undefined) {
+										obj.forEach( function(item) {
+											item.init();
+											this.objects.push(item);
+										}.bind(this));
 
-									this.dropout = 3;
-								} else {
-									obj.init();
-									this.objects.push(obj);
+										this.dropout = 3;
+									} else {
+										obj.init();
+										this.objects.push(obj);
+									}
 								}
-							}
+							}.bind(this));
+
 						}
 					}
 				};
@@ -85,7 +83,7 @@ FallingJim = window.FallingJim || {};
 					this.y = y;
 					this.width = this.getSprite().width;
 					this.height = this.getSprite().height;
-						
+
 					this.speed = speed;
 					this.out = false;
 					this.colliderFunc = null;
@@ -110,24 +108,22 @@ FallingJim = window.FallingJim || {};
 						} else
 							return false;
 					},
-					collide: function (x,y,width,height)
-					{
-						
-						if (this.x < x + width  && this.x + this.width  > x &&
- 					        this.y < y + height && this.y + this.height > y) {
-						return true;
-						}else { return false;}
-						
+					collide : function(x, y, width, height) {
+
+						if (this.x < x + width && this.x + this.width > x && this.y < y + height && this.y + this.height > y) {
+							return true;
+						} else {
+							return false;
+						}
+
 					},
-					activateColliderFunc: function ()
-					{
-						if(this.colliderFunc !== null)
-						{
-							this.colliderFunc(); 	
+					activateColliderFunc : function() {
+						if (this.colliderFunc !== null) {
+							this.colliderFunc();
 						}
 					}
 				};
 
 				return channelobj;
 			}());
-	}(window.FallingJim || {})); 
+	}(window.FallingJim || {}));

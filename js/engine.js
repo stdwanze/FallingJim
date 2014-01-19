@@ -8,7 +8,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				this.ctxt = ctxt;
 				this.shapes = [];
 				this.eventObjects = [];
-				
+				this.name = new Date().toString();
 				this.run = false;
 				this.frame = 1;
 				

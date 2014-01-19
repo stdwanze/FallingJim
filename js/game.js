@@ -1,5 +1,4 @@
-FallingJim = window.FallingJim || {};
-( function(FallingJim) {"use strict";
+FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 
 		FallingJim.GameInstance = {
 			Logic : null,
@@ -10,7 +9,7 @@ FallingJim = window.FallingJim || {};
 
 		FallingJim.Configuration = {
 			BackgroundSpeed : 1,
-			FallingSpeed : 2,
+			FallingSpeed : 3,
 			PlayerMovementSpeed : 4
 		};
 
@@ -70,29 +69,20 @@ FallingJim = window.FallingJim || {};
 
 						this.osd = new Kit.OSDManager(this.canvas, this.canvas.getContext("2d"));
 
+						this.levels = [];
+						this.level = 0;
 					},
 					generateChannels : function() {
 						var height = this.canvas.height;
 						var positions = [140, 270, 400];
+						this.levels = [new FallingJim.Level(positions, 5)];
+						//
 
 						var channels = [];
 						for (var i = 0; i < positions.length; i++) {
 							channels.push(new FallingJim.Channel(positions[i], height, this.repo));
-							channels[i].createNewObj = function(x, height) {
+							channels[i].createNewObj = this.levels[this.level].createNewObj();
 
-								var rand = Kit.Helper.getRandomNumber(9);
-								if (rand > 5) {
-									return null;
-								}
-								if (rand !== 5) {
-									var type = FallingJim.CoinType.getByIndex(rand);
-									return new FallingJim.Coin(type, x, height, FallingJim.GameInstance.Config.FallingSpeed);
-
-								} else {
-									return FallingJim.ObstacleFactory.createGrassObstacle(x, height, FallingJim.GameInstance.Config.FallingSpeed);
-								}
-
-							}.bind(this);
 						};
 
 						return channels;
@@ -124,11 +114,11 @@ FallingJim = window.FallingJim || {};
 
 						this.stop();
 						FallingJim.GameInstance.SoundManager.play(FallingJim.Sounds.Death.name);
-					
-						setTimeout(function() {
+
+						setTimeout( function() {
 							this.osd.add(new Kit.Button(new Kit.Sprite(FallingJim.GameInstance.ImageRepo.getImage("restart"), 300, 200), this._run.bind(this)));
-							this.osd.add(new Kit.TextArea(295,270,"Arial",16,"blue").setText("restart"));
-							
+							this.osd.add(new Kit.TextArea(295, 270, "Arial", 16, "blue").setText("restart"));
+
 							this.osd.render();
 						}.bind(this), 200);
 
@@ -166,4 +156,81 @@ FallingJim = window.FallingJim || {};
 
 				return game;
 			}());
+
+		FallingJim.Level = ( function() {
+
+				function level(positions, height) {
+					this.positions = positions;
+					this.channels = { };
+					this.fullblockedwait = height;
+					this.processPostions();
+				}
+
+
+				level.prototype = {
+
+					processPostions : function() {
+						this.positions.forEach( function(pos) {
+							this.channels["" + pos] = {
+								blocked : false,
+								countDown : 0,
+								tick : function() {
+									if (this.countDown == 0) {
+										this.blocked = false;
+									}
+									else {this.countDown -= 1;}
+									
+								}
+							};
+
+						}.bind(this));
+					},
+					isBlockingAllowed : function() {
+
+						var blockcount = 0;
+						for (var key in this.channels) {
+							blockcount += this.channels[key].blocked ? 1 : 0;
+						}
+						return (blockcount < 2);
+					},
+					setBlocked : function(x) {
+						this.channels["" + x].blocked = true;
+						this.channels["" + x].countDown = this.fullblockedwait;
+
+					},
+					createNewObj : function() {
+						return function(x, height) {
+							var deferred = $.Deferred();
+							var channel = this.channels["" + x];
+							channel.tick();
+							var blockallowed = this.isBlockingAllowed();
+
+							Kit.Helper.getRandomNumber(9).then( function(rand) {
+								console.log("rand gave "+rand + " for "+x);
+								var obj = null;
+								if (rand > 5) {
+									//return null;
+									console.log("->nothing");
+								}
+								else if (rand !== 5) {
+									var type = FallingJim.CoinType.getByIndex(rand);
+									obj = new FallingJim.Coin(type, x, height, FallingJim.GameInstance.Config.FallingSpeed);
+									console.log("->coin");
+								} else {
+									if (blockallowed) {
+										this.setBlocked(x);
+										obj = FallingJim.ObstacleFactory.createGrassObstacle(x, height, FallingJim.GameInstance.Config.FallingSpeed);
+										console.log("->obstacle");
+									}
+									console.log("blocked->no obstacle");
+								}
+								deferred.resolve(obj);
+							}.bind(this));
+							return deferred.promise();
+						}.bind(this);
+					}
+				};
+				return level
+			}());
+
 	}(window.FallingJim || {}));
