@@ -75,7 +75,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					generateChannels : function() {
 						var height = this.canvas.height;
 						var positions = [140, 270, 400];
-						this.levels = [new FallingJim.Level(positions, 10)];
+						this.levels = [new FallingJim.Level(positions, 20)];
 						//
 
 						var channels = [];
@@ -203,21 +203,21 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 							var deferred = $.Deferred();
 							var channel = this.channels["" + x];
 							channel.tick();
-							var blockallowed = this.isBlockingAllowed();
+							
 
 							Kit.Helper.getRandomNumber(9).then( function(rand) {
 								console.log("rand gave "+rand + " for "+x);
 								var obj = null;
 								if (rand > 5) {
 									//return null;
-									console.log("->nothing");
+							//		console.log("->nothing");
 								}
 								else if (rand !== 5) {
 									var type = FallingJim.CoinType.getByIndex(rand);
 									obj = new FallingJim.Coin(type, x, height, FallingJim.GameInstance.Config.FallingSpeed);
-									console.log("->coin");
+							//		console.log("->coin");
 								} else {
-									if (blockallowed) {
+									if (this.isBlockingAllowed()) {
 										this.setBlocked(x);
 										obj = FallingJim.ObstacleFactory.createGrassObstacle(x, height, FallingJim.GameInstance.Config.FallingSpeed);
 										console.log("->obstacle");

@@ -5,7 +5,7 @@ FallingJim = window.FallingJim || {};
 
 				function imagerepo() {
 					this.register("img/sky.png", "background");
-					this.register("img/player_left.png", "playerLeft");
+				//	this.register("img/player_left.png", "playerLeft");
 				//	this.register("img/player_right.png", "playerRight");
 					this.register("img/coinBronze.png", "bronzecoin");
 					this.register("img/coinSilver.png", "silvercoin");
@@ -18,6 +18,7 @@ FallingJim = window.FallingJim || {};
 					this.register("img/right_arrow.png", "hudright");
 					this.register("img/restart.png","restart");
 					this.registerAnimation("img/player_right",4,"png","playerRight");
+					this.registerAnimation("img/player_left",4,"png","playerLeft");
 				}
 
 
