@@ -2,7 +2,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 
 		FallingJim.Engine = (function() {
 
-			function engine(canvas, ctxt) {
+			function engine(canvas, ctxt, stillrun) {
 
 				this.canvas = canvas;
 				this.ctxt = ctxt;
@@ -11,7 +11,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 				this.name = new Date().toString();
 				this.run = false;
 				this.frame = 1;
-				
+				this.stillrun = stillrun;
 				this.shapes.push(new FallingJim.Background("background"));
 				//this.shapes.push(new Kit.Sprite(this.repo.getImage("playerRight"),50, 10));
 				
@@ -118,7 +118,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 
 					var self = this;
 					// register next
-					if (this.run) {
+					if (this.run && this.stillrun()) {
 						requestAnimFrame( function() {
 							self.tickndraw(frame + 1);
 						});

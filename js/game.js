@@ -95,7 +95,7 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 					_run : function() {
 						// ENGINE
 						this.points = 0;
-						this.engine = new FallingJim.Engine(this.canvas, this.canvas.getContext("2d"));
+						this.engine = new FallingJim.Engine(this.canvas, this.canvas.getContext("2d"), function () { return (this.state === State.RUN);}.bind(this));
 						this.channels = this.generateChannels();
 						this.engine.registerChannels(this.channels);
 
@@ -107,8 +107,9 @@ FallingJim = window.FallingJim || {}; ( function(FallingJim) {"use strict";
 						this.state = state;
 					},
 					stop : function() {
-						this.engine.stop();
 						this.setState(State.END);
+						this.engine.stop();
+						
 					},
 					dead : function() {
 
